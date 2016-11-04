@@ -61,8 +61,17 @@
     <Compile Include="Migrations\201611030232148_initDb.Designer.cs">
       <DependentUpon>201611030232148_initDb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611040407552_updatePostCategory.cs" />
+    <Compile Include="Migrations\201611040407552_updatePostCategory.Designer.cs">
+      <DependentUpon>201611040407552_updatePostCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611040737407_addErrorTable.cs" />
+    <Compile Include="Migrations\201611040737407_addErrorTable.Designer.cs">
+      <DependentUpon>201611040737407_addErrorTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ErrorRepository.cs" />
     <Compile Include="Repositories\FooterRepository.cs" />
     <Compile Include="Repositories\MenuGroupRepository.cs" />
     <Compile Include="Repositories\MenuRepository.cs" />
@@ -98,6 +107,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201611030232148_initDb.resx">
       <DependentUpon>201611030232148_initDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611040407552_updatePostCategory.resx">
+      <DependentUpon>201611040407552_updatePostCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611040737407_addErrorTable.resx">
+      <DependentUpon>201611040737407_addErrorTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

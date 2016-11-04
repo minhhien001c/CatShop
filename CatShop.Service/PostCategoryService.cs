@@ -11,12 +11,13 @@ namespace CatShop.Service
 {
     public interface IPostCategoryService
     {
-        void Add(PostCategory postCategory);
+        PostCategory Add(PostCategory postCategory);
         void Update(PostCategory postCategory);
         void Delete(int id);
         PostCategory GetById(int id);
         IEnumerable<PostCategory> GetAll();
         IEnumerable<PostCategory> GetAllByParent(int parentId);
+        void Save();
     }
     public class PostCategoryService : IPostCategoryService
     {
@@ -28,9 +29,9 @@ namespace CatShop.Service
             this._postCategoryRepository = postCategoryRepository;
             this._unitOfWork = unitOfWork;
         }
-        public void Add(PostCategory postCategory)
+        public PostCategory Add(PostCategory postCategory)
         {
-            _postCategoryRepository.Add(postCategory);
+           return _postCategoryRepository.Add(postCategory);
         }
 
         public void Delete(int id)
@@ -45,12 +46,17 @@ namespace CatShop.Service
 
         public IEnumerable<PostCategory> GetAllByParent(int parentId)
         {
-            return _postCategoryRepository.GetMulti(x => x.ParentID == parentId);
+            return _postCategoryRepository.GetMulti(x =>x.Status && x.ParentID == parentId);
         }
 
         public PostCategory GetById(int id)
         {
             return _postCategoryRepository.GetSingleById(id);
+        }
+
+        public void Save()
+        {
+            _unitOfWork.Commit();
         }
 
         public void Update(PostCategory postCategory)
