@@ -17,6 +17,7 @@ namespace CatShop.Service
         IEnumerable<Post> GetAll();
         IEnumerable<Post> GetAllPaging(int page, int pageSize, out int totalRow);
         IEnumerable<Post> GetAllByTagPaging(string tag, int page, int pageSize, out int totalRow);
+        IEnumerable<Post> GetAllByCategoryPaging(int categoryId,string tag, int page, int pageSize, out int totalRow);
         Post GetById(int id);
         void Save();
     }
@@ -44,9 +45,14 @@ namespace CatShop.Service
             return _postRepository.GetAll(new string[] { "PostCategory" });
         }
 
+        public IEnumerable<Post> GetAllByCategoryPaging(int categoryId, string tag, int page, int pageSize, out int totalRow)
+        {
+            return _postRepository.GetMultiPaging(x => x.Status && x.PostCategoryID == categoryId, out totalRow, page, pageSize, new string[] { "PostCategory" });
+        }
+
         public IEnumerable<Post> GetAllByTagPaging(string tag, int page, int pageSize, out int totalRow)
         {
-            return _postRepository.GetMultiPaging(x => x.Status, out totalRow, page, pageSize);
+            return _postRepository.GetAllByTag(tag, page, pageSize,out totalRow);
         }
 
         public IEnumerable<Post> GetAllPaging(int page, int pageSize, out int totalRow)
