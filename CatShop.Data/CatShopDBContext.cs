@@ -1,4 +1,5 @@
 ﻿using CatShop.Model.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CatShop.Data
 {
-    public class CatShopDbContext : DbContext
+    public class CatShopDbContext : IdentityDbContext<ApplicationUser>
     {
         public CatShopDbContext() : base("CatShopConnection")
         {
@@ -32,11 +33,17 @@ namespace CatShop.Data
         public DbSet<Tag> Tags { set; get; }
         public DbSet<VisitorStatistic> VisitorStatistics { set; get; }
         public DbSet<Error> Errors { set; get; }
-
+        //xem mau khi tao project co authen Models/IdentityModels
+        //tao moi chinh no
+        public static CatShopDbContext Create()
+        {
+            return new CatShopDbContext();
+        }
         //chay khi khoi tao entity framework
         protected override void OnModelCreating(DbModelBuilder builder)
         {
-
+            builder.Entity<IdentityUserRole>().HasKey(i =>new { i.UserId, i.RoleId });
+            builder.Entity<IdentityUserLogin>().HasKey(i => i.UserId);
         }
     }
 }

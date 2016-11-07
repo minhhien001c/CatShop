@@ -14,11 +14,12 @@ namespace CatShop.Web.Infrastructure.Core
 {
     public class ApiControllerBase : ApiController
     {
-        IErrorService _errorService;
+        private IErrorService _errorService;
         public ApiControllerBase(IErrorService errorService)
         {
             this._errorService = errorService;
         }
+
         protected HttpResponseMessage CreateHttpResponse(HttpRequestMessage requestMessage, Func<HttpResponseMessage> function)
         {
             HttpResponseMessage response = null;
@@ -31,11 +32,9 @@ namespace CatShop.Web.Infrastructure.Core
                 //Trace.writeline khi debug se ra cua so output
                 foreach (var eve in ex.EntityValidationErrors)
                 {
-                    Trace.WriteLine($"Entity of type {eve.Entry.Entity.GetType().Name } in state {eve.Entry.State} has the following validation errors.");
-                    foreach (var ev in eve.ValidationErrors)
-                    {
-                        Trace.WriteLine($" _property {ev.PropertyName} , Error {ev.ErrorMessage}");
-                    }
+                    Trace.WriteLine($"Entity of type\"{eve.Entry.Entity.GetType().Name }\" in state\"{eve.Entry.State}\"has the following validation errors.");
+                    foreach (var ve in eve.ValidationErrors)
+                        Trace.WriteLine($" -property\"{ve.PropertyName}\", Error : \"{ve.ErrorMessage}\"");
                 }
             }
             catch (DbUpdateException dbEx)
@@ -48,7 +47,6 @@ namespace CatShop.Web.Infrastructure.Core
                 LogError(ex);
                 response = requestMessage.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
             }
-
             return response;
         }
         private void LogError(Exception ex)
@@ -56,17 +54,14 @@ namespace CatShop.Web.Infrastructure.Core
             try
             {
                 Error error = new Error();
+                error.CreatedDate = DateTime.Now;
                 error.Message = ex.Message;
                 error.StackTrace = ex.StackTrace;
-                error.CreatedDate = DateTime.Now;
                 _errorService.Create(error);
                 _errorService.Save();
             }
             catch
-            {
-
-            }
-
+            { }
         }
     }
 }
