@@ -1,6 +1,10 @@
 ﻿/// <reference path="/Assets/admin/libs/angular/angular.js" />
 (function () {
-    angular.module('catshop', ['catshop.common']).config(config);
+    angular.module('catshop',
+        ['catshop.product_categories',
+         'catshop.products',
+         'catshop.common'])
+        .config(config);
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
     function config($stateProvider, $urlRouterProvider)
     {
