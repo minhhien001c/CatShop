@@ -21,13 +21,26 @@ namespace CatShop.Web.Api
             this._productCategoryService = productCategoryService;
         }
         [Route("getall")]
-        public HttpResponseMessage Get(HttpRequestMessage request)
+        public HttpResponseMessage Get(HttpRequestMessage request,int page, int pageSize)
         {
             return CreateHttpResponse(request, () =>
             {
+                var totalRow = 0;
                 var model = _productCategoryService.GetAll();
-                var categoryVM = Mapper.Map<IEnumerable<ProductCategory>, IEnumerable<ProductCategoryViewModel>>(model);
-                HttpResponseMessage response = request.CreateResponse(HttpStatusCode.OK, categoryVM);
+                totalRow = model.Count();
+
+                var query = model.OrderByDescending(x=>x.CreatedDate).Skip(page * pageSize).Take(pageSize);
+                var responseData = Mapper.Map<IEnumerable<ProductCategory>, IEnumerable<ProductCategoryViewModel>>(query);
+
+                var paginationSet = new PaginationSet<ProductCategoryViewModel>()
+                {
+                    Items = responseData,
+                    Page = page,
+                    TotalCount = totalRow,
+                    TotalPage = (int)Math.Ceiling((decimal)totalRow / pageSize)
+                };
+
+                HttpResponseMessage response = request.CreateResponse(HttpStatusCode.OK, paginationSet);
                 return response;
             });
 
